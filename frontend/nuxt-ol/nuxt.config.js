@@ -1,4 +1,8 @@
 export default {
+  publicRuntimeConfig: {
+    apiUrl: process.env.API_URL
+  },
+
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
@@ -54,23 +58,10 @@ export default {
 
   auth: {
     strategies: {
-      local: {
-        token: {
-          property: 'token',
-          global: true,
-          // required: true,
-          // type: 'Bearer'
-        },
-        user: {
-          property: 'user',
-          // autoFetch: true
-        },
-        endpoints: {
-          login: { url: '/api/auth/login', method: 'post' },
-          logout: { url: '/api/auth/logout', method: 'post' },
-          user: { url: '/api/auth/user', method: 'get' }
-        }
-      }
+      laravelSanctum: {
+        provider: 'laravel/sanctum',
+        url: process.env.API_URL
+      },
     }
-  }
+  },
 }

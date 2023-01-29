@@ -2,8 +2,6 @@ interface State {
   questions: string[];
   answers: any[];
   userAnswers: any[];
-  user: string | null;
-  token: string | null;
 }
 
 interface Commit {
@@ -14,8 +12,6 @@ export const state = () => ({
   questions: [],
   answers: [],
   userAnswers: [],
-  user: null,
-  token: null,
 });
 
 export const getters = {
@@ -45,31 +41,6 @@ export const mutations = {
 };
 
 export const actions = {
-  async submitRegisterForm(
-    { commit }: Commit,
-    {
-      email,
-      password,
-    }: {
-      email: string;
-      password: string;
-    }
-  ) {
-    // try {
-    //   const response = await axios.post("http://localhost:8000/api/login", {
-    //     email,
-    //     password,
-    //   });
-    //   if (response.data.success) {
-    //     commit("SET_USER", response.data.user);
-    //     commit("SET_TOKEN", response.data.token);
-    //   } else {
-    //     // handle unsuccessful login
-    //   }
-    // } catch (error) {
-    //   // handle error
-    // }
-  },
   async submitAnswers({ commit }: Commit, answers: any[]) {
     commit("SET_USER_ANSWERS", answers);
     // try {
