@@ -1,39 +1,43 @@
 <template>
   <div>
-    <form @submit.prevent="onSubmit">
-      <label>
-        Email:
-        <input type="email" v-model="email" />
-      </label>
-      <br />
-      <label>
-        Password:
-        <input type="password" v-model="password" />
-      </label>
-      <br />
-      <button type="submit">Submit</button>
+    <form @submit.prevent="userLogin">
+      <div>
+        <label>Username</label>
+        <input type="text" v-model="login.username" />
+      </div>
+      <div>
+        <label>Password</label>
+        <input type="text" v-model="login.password" />
+      </div>
+      <div>
+        <button type="submit">Submit</button>
+      </div>
     </form>
   </div>
 </template>
 
-
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { mapActions, mapState } from 'vuex'
 
-export default defineComponent({
-    name: "LoginForm",
-    data() {
-        return {
-            email: '',
-            password: ''
-        }
-    },
-    methods: {
-        ...mapActions(['submitLoginForm']),
-        onSubmit() {
-            this.submitLoginForm({email: this.email, password: this.password});
-        }
+
+export default defineComponent ({
+  data() {
+    return {
+      login: {
+        username: '',
+        password: ''
+      }
     }
+  },
+  methods: {
+    async userLogin() {
+      try {
+        let response = await this.$auth.loginWith('local', { data: this.login })
+        console.log(response)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
 })
 </script>

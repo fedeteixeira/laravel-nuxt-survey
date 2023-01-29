@@ -7,24 +7,28 @@
 
 
 <script lang="ts">
-import Vue from 'vue'
 import { Bar } from 'vue-chartjs'
-import { mapState } from 'vuex'
+import { defineComponent } from 'vue'
+import { ChartData } from 'chart.js';
 
-export default Vue.extend({
+export default defineComponent({
   components: {
     BarChart: Bar
   },
   computed: {
-    ...mapState(['questions']),
-    ...mapState(['answers']),
+    questions() {
+      return this.$store.state.questions;
+    },
+    answers() {
+      return this.$store.state.answers;
+    },
     chartData() {
         return {
-            labels: this.questions,
+            labels: this.$store.state.questions,
             datasets: [{
                 label: 'Answers',
                 backgroundColor: '#f87979',
-                data: this.answers
+                data: this.$store.state.answers,
             }]
         }
     }
@@ -48,13 +52,10 @@ export default Vue.extend({
   },
   methods: {
     handlerMethod() {
-        if(this.chartData) {
-            this.chartData.datasets[0].data = this.answers
-            this.$nextTick(() => {
-                this.$refs.barChart?.renderChart(this.chartData)
-            })
-        }
-        
+      this.chartData.datasets[0].data = this.answers
+      this.$nextTick(() => {
+          (this.$refs.barChart as Bar)?.renderChart(this.chartData as ChartData)
+      })
     }
   },
   mounted() {
