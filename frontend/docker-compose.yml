@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  nuxt-ol:
+    environment:
+      - NUXT_HOST=0.0.0.0
+      - NUXT_PORT=3000
+    image: node:16-alpine
+    container_name: nuxt.ol
+    hostname: ol.nuxt
+    ports:
+      - 3000:3000
+    volumes:
+      - ./nuxt-ol:/usr/src/nuxt-ol
+    working_dir: /usr/src/nuxt-ol
+    command: npm run dev
