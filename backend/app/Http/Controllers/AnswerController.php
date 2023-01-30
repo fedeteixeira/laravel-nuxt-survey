@@ -6,37 +6,40 @@ use App\Models\Answer;
 use App\Models\Question;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Auth;
 
 class AnswerController extends Controller
 {
-    public function store(Request $request, $question_id)
-    {
-        // Validate the request data
-        $request->validate([
-            'body' => 'required|integer|min:0|max:5',
-        ]);
+    protected $fillable = [
+        'body', 'question_id', 'user_id'
+    ];
 
-        // Find the question that the answer belongs to
-        $question = Question::findOrFail($question_id);
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'answers.*' => 'nullable|integer|min:0|max:5',
+        ]);
+        $answers = $validatedData['answers'];
 
         // Find the authenticated user
-        $user = auth()->user();
+        $user = Auth::user();
 
-        // Create a new answer instance
-        $answer = new Answer([
-            'body' => $request->body,
-        ]);
+        foreach ($answers as $key => $value) {
+            if(isset($value)) {
+                // Find the question that the answer belongs to
+                $question = Question::findOrFail($key);
 
-        // Associate the answer with the question and user
-        $answer->question()->associate($question);
-        $answer->user()->associate($user);
-
-        // Save the answer to the database
-        $answer->save();
+                $answer = new Answer;
+                $answer->body = $value;
+                // Associate the answer with the question and user
+                $answer->question()->associate($question);
+                $answer->user()->associate($user);
+                $answer->save();
+            }
+        }
 
         return response()->json([
-            'message' => 'Answer created successfully.',
-            'answer' => $answer,
+            'message' => 'Answers stored successfully.',
         ], 201);
     }
 

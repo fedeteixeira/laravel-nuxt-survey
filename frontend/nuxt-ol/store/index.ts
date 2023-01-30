@@ -1,7 +1,7 @@
 interface State {
-  questions: string[];
-  answers: any[];
-  userAnswers: any[];
+  questions: Object[];
+  answers: Object;
+  userAnswers: Object;
 }
 
 interface Commit {
@@ -10,8 +10,8 @@ interface Commit {
 
 export const state = () => ({
   questions: [],
-  answers: [],
-  userAnswers: [],
+  answers: {},
+  userAnswers: {},
 });
 
 export const getters = {
@@ -29,42 +29,52 @@ export const getters = {
 };
 
 export const mutations = {
-  SET_USER_ANSWERS(state: State, userAnswers: any[]) {
+  SET_USER_ANSWERS(state: State, userAnswers: Object) {
     state.userAnswers = userAnswers;
   },
-  SET_ANSWERS(state: State, answers: any[]) {
+  SET_ANSWERS(state: State, answers: Object) {
     state.answers = answers;
   },
-  SET_QUESTIONS(state: State, questions: string[]) {
+  SET_QUESTIONS(state: State, questions: Object[]) {
     state.questions = questions;
   },
 };
 
 export const actions = {
-  async submitAnswers({ commit }: Commit, answers: any[]) {
+  async submitAnswers({ commit }: Commit, answers: Object) {
     commit("SET_USER_ANSWERS", answers);
-    // try {
-    //   const { data } = await axios.post("/api/answers", {
-    //     answers,
-    //   });
-    //   // do something with the data
-    // } catch (e) {
-    //   // handle the error
-    // }
+    try {
+      await axios.post(
+        `${this.$config.apiUrl}/api/answers`,
+        {
+          answers,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${app.$auth?.getToken("local") ?? "7"}`,
+          },
+        }
+      );
+    } catch (e) {
+      // handle the error
+    }
   },
   async fetchAnswers({ commit }: Commit) {
-    commit("SET_ANSWERS", [1, 1, 1, 1]);
-    // try {
-    //   const { data } = await axios.get("/api/questions");
-    //   commit("SET_ANSWERS", data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      const { data } = await this.$axios.get(
+        `${this.$config.apiUrl}/api/answers`
+      );
+      commit("SET_ANSWERS", data);
+    } catch (error) {
+      console.error(error);
+    }
   },
   async fetchQuestions({ commit }: Commit) {
     try {
-      // const { data } = await axios.get("/api/questions");
-      commit("SET_QUESTIONS", ["Question1", "Question2"]);
+      const { data } = await this.$axios.get(
+        `${this.$config.apiUrl}/api/questions`
+      );
+      commit("SET_QUESTIONS", data?.questions ?? []);
     } catch (error) {
       console.error(error);
     }
