@@ -1,6 +1,9 @@
 <template>
-    <div v-if="values.length > 0 && labels.length > 0">
-        <bar-chart :chartData="chartData" ref="barChart"></bar-chart>
+    <div>
+      <Navbar></Navbar>
+      <div v-if="values.length > 0 && labels.length > 0">
+          <bar-chart :chartData="chartData" ref="barChart"></bar-chart>
+      </div>
     </div>
 </template>
 
@@ -10,6 +13,7 @@ import { defineComponent } from 'vue'
 import { ChartData } from 'chart.js';
 
 export default defineComponent({
+  middleware: 'auth',
   components: {
     BarChart: Bar
   },

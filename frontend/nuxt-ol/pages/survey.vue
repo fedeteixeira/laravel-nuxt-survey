@@ -1,14 +1,20 @@
 <template>
   <div>
-    <form @submit.prevent="onSubmit">
-      <div v-for="question in questions" :key="question.id">
-        {{ question.title }}
-        <div v-for="value in values" :key="value">
-          <input type="radio" :name="'question' + question.id" v-model="answers[question.id]" :value="value"> {{ value }}
+    <Navbar></Navbar>
+    <div class="container-fluid mb-3">
+      <form @submit.prevent="onSubmit" class="d-flex flex-column align-items-center">
+        <div v-for="(question, index) in questions" :key="question.id" class="my-3">
+          <h5 class="text-center">{{ `${index+1}. ${question.title}` }}</h5>
+          <div class="text-center">
+            <div class="form-check form-check-inline" v-for="value in values" :key="value">
+              <input class="form-check-input" type="radio" :name="'question' + question.id" v-model="answers[question.id]" :value="value" id="value"> 
+              <label class="form-check-label" for="value">{{ value }}</label>
+            </div>
+          </div>
         </div>
-      </div>
-      <button type="submit">Submit</button>
-    </form>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -22,6 +28,7 @@ interface Data {
 }
 
 export default Vue.extend({
+  middleware: 'auth',
   computed: {
     ...mapState(['questions']),
   },
@@ -44,14 +51,6 @@ export default Vue.extend({
       })
       
     }
-  },
-  watch: {
-    questions: {
-      handler() {
-        console.log(this.questions);
-      },
-      deep: true
-    },
   },
   mounted() {
     this.$store.dispatch('fetchQuestions').then((_response) => {

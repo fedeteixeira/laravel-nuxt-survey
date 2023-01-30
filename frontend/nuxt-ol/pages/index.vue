@@ -1,21 +1,8 @@
 <template>
-  <div>
-    <router-link to="/login">Login</router-link>
-    <router-link to="/register">Register</router-link>
-    <router-link to="/survey">Survey</router-link>
-    <button @click="logout">Logout</button>
+  <div class="d-flex flex-column align-items-center vh-100 vw-100">
+    <Navbar></Navbar>
+    <div class=" mx-auto h-100 d-flex">
+      <h2 class="text-center my-auto">Survey App</h2>
+    </div>
   </div>
 </template>
-
-<script lang="ts">
-import Vue from 'vue'
-
-export default Vue.extend({
-  name: 'IndexPage',
-  methods: {
-    async logout() {
-      await this.$auth.logout();
-    }
-  }
-})
-</script>

@@ -44,17 +44,9 @@ export const actions = {
   async submitAnswers({ commit }: Commit, answers: Object) {
     commit("SET_USER_ANSWERS", answers);
     try {
-      await axios.post(
-        `${this.$config.apiUrl}/api/answers`,
-        {
-          answers,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${app.$auth?.getToken("local") ?? "7"}`,
-          },
-        }
-      );
+      await this.$axios.post(`${this.$config.apiUrl}/api/answers`, {
+        answers,
+      });
     } catch (e) {
       // handle the error
     }

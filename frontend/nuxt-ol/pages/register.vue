@@ -1,25 +1,30 @@
 <template>
-  <div>
-    <form @submit.prevent="register">
-
-      <label for="name">Name:</label>
-      <input type="text" id="name" v-model="form.name" />
-      <br />
-
-      <label for="email">Email:</label>
-      <input type="email" id="email" v-model="form.email" />
-      <br />
-      
-      <label for="password">Password:</label>
-      <input type="password" id="password" v-model="form.password" />
-      <br />
-
-      <label for="password_confirmation">Password confirmation:</label>
-      <input type="password" id="password_confirmation" v-model="form.password_confirmation" />
-      <br />
-      
-      <button type="submit">Register</button>
-    </form>
+  <div class="d-flex flex-column align-items-center vh-100 vw-100">
+    <Navbar></Navbar>
+    <div class="w-50 mx-auto">
+      <h2 class="text-center mb-5">Register</h2>
+      <form @submit.prevent="register">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input id="name" class="form-control" type="name" v-model="form.name" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" class="form-control" type="email" v-model="form.email" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" class="form-control" type="password" v-model="form.password" />
+        </div>
+        <div class="form-group">
+          <label for="password_confirmation">Confirm Password</label>
+          <input id="password_confirmation" class="form-control" type="password" v-model="form.password_confirmation" />
+        </div>
+        <div class="form-group text-center">
+          <button class="btn btn-primary mt-3" type="submit">Register</button>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -42,9 +47,20 @@ export default defineComponent({
   methods: {
     async register() {
       try {
-        this.$axios.post(`${this.$config.apiUrl}/register`, this.form).then((response) => {
-          this.$auth.loginWith('laravelSanctum', { data: this.form });
-        })
+        this.$axios.get('/sanctum/csrf-cookie').then(() => {
+          this.$axios
+            .post('/register', this.form)
+            .then(() => {
+                // Set token flag and fetch user
+                this.$auth.setUserToken(true).then(() => {
+                  this.$router.push('/')
+                })
+            })
+            .catch((errors) => {
+              // Registration failed
+              console.log(errors)
+            })
+        });
       } catch (error) {
         console.log(error)
       }
