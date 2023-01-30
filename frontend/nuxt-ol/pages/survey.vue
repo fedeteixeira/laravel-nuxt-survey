@@ -31,21 +31,18 @@ export default Vue.extend({
       answers: {},
     }
   },
-  async asyncData({store}){
-    await store.dispatch('fetchQuestions')
-  },
   methods: {
     ...mapActions(['submitAnswers']),
-    async onSubmit() {
-      await this.$axios.post(
+    onSubmit() {
+      this.$axios.post(
         `${this.$config.apiUrl}/api/answers`,
         {
           answers: this.answers,
         },
-      );
-      // setTimeout(() => {
-      //   this.$router.push('/results');
-      // }, 3000);
+      ).then((_response) => {
+        this.$router.push('/results');
+      })
+      
     }
   },
   watch: {
@@ -57,9 +54,11 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.questions.forEach(question => {
-      this.answers[question.id] = null
-    });
+    this.$store.dispatch('fetchQuestions').then((_response) => {
+      this.questions.forEach((question) => {
+        this.answers[question.id] = null
+      });
+    })
   },
 })
 </script>

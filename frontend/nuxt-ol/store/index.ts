@@ -1,6 +1,6 @@
 interface State {
   questions: Object[];
-  answers: Object;
+  answers: Object[];
   userAnswers: Object;
 }
 
@@ -10,7 +10,7 @@ interface Commit {
 
 export const state = () => ({
   questions: [],
-  answers: {},
+  answers: [],
   userAnswers: {},
 });
 
@@ -32,7 +32,7 @@ export const mutations = {
   SET_USER_ANSWERS(state: State, userAnswers: Object) {
     state.userAnswers = userAnswers;
   },
-  SET_ANSWERS(state: State, answers: Object) {
+  SET_ANSWERS(state: State, answers: Object[]) {
     state.answers = answers;
   },
   SET_QUESTIONS(state: State, questions: Object[]) {
@@ -62,9 +62,9 @@ export const actions = {
   async fetchAnswers({ commit }: Commit) {
     try {
       const { data } = await this.$axios.get(
-        `${this.$config.apiUrl}/api/answers`
+        `${this.$config.apiUrl}/api/answers/average`
       );
-      commit("SET_ANSWERS", data);
+      commit("SET_ANSWERS", data?.answers ?? {});
     } catch (error) {
       console.error(error);
     }

@@ -1,10 +1,8 @@
 <template>
-    <div v-if="answers.length > 0 && questions.length > 0">
+    <div v-if="values.length > 0 && labels.length > 0">
         <bar-chart :chartData="chartData" ref="barChart"></bar-chart>
     </div>
 </template>
-
-
 
 <script lang="ts">
 import { Bar } from 'vue-chartjs'
@@ -16,21 +14,28 @@ export default defineComponent({
     BarChart: Bar
   },
   computed: {
-    questions() {
-      return this.$store.state.questions;
-    },
     answers() {
       return this.$store.state.answers;
     },
+    values() {
+      if(this.answers?.length)
+        return this.answers.map((answer) => answer.average_body);
+      return []
+    },
+    labels() {
+      if(this.answers?.length)
+        return this.answers.map((answer) => answer.title);
+      return []
+    },
     chartData() {
-        return {
-            labels: this.$store.state.questions,
-            datasets: [{
-                label: 'Answers',
-                backgroundColor: '#f87979',
-                data: this.$store.state.answers,
-            }]
-        }
+      return {
+        labels: this.labels,
+        datasets: [{
+            label: 'Answers',
+            backgroundColor: '#f87979',
+            data: this.values,
+        }]
+      }
     }
   },
   watch: {
@@ -47,12 +52,9 @@ export default defineComponent({
       deep: true
     }
   },
-  async asyncData({store}){
-    await store.dispatch('fetchAnswers')
-  },
   methods: {
     handlerMethod() {
-      this.chartData.datasets[0].data = this.answers
+      this.chartData.datasets[0].data = this.values
       this.$nextTick(() => {
           (this.$refs.barChart as Bar)?.renderChart(this.chartData as ChartData)
       })
@@ -60,6 +62,7 @@ export default defineComponent({
   },
   mounted() {
     this.handlerMethod();
+    this.$store.dispatch('fetchAnswers')
   },
 })
 </script>

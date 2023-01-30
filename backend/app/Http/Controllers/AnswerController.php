@@ -52,8 +52,9 @@ class AnswerController extends Controller
 
     public function average()
     {
-        $answers = Answer::selectRaw('question_id, AVG(body) as average_body')
-            ->groupBy('question_id')
+        $answers = Answer::selectRaw('questions.title as title, answers.question_id as question_id, AVG(answers.body) as average_body')
+            ->join('questions', 'questions.id', '=', 'answers.question_id')
+            ->groupBy('answers.question_id')
             ->get();
 
         return response()->json(['answers' => $answers], 200);
