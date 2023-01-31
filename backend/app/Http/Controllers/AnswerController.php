@@ -60,4 +60,12 @@ class AnswerController extends Controller
         return response()->json(['answers' => $answers], 200);
     }
 
+    public function usersWithoutAnswers()
+    {
+        $answeredUserIds = Answer::pluck('user_id')->toArray();
+        $usersWithoutAnswers = User::whereNotIn('id', $answeredUserIds)->get();
+
+        return $usersWithoutAnswers;
+    }
+
 }

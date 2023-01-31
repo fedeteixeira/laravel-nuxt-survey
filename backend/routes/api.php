@@ -23,6 +23,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::post('/answers', [AnswerController::class, 'store']);
 Route::get('/answers', [AnswerController::class, 'index']);
 Route::get('/answers/average', [AnswerController::class, 'average']);
+Route::middleware(['auth:sanctum', 'admin'])->get('/answers/unanswered', [AnswerController::class, 'usersWithoutAnswers']);
 
 Route::post('/questions', [QuestionController::class, 'store']);
 Route::get('/questions', [QuestionController::class, 'index']);
