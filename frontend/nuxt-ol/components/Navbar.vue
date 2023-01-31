@@ -16,6 +16,9 @@
       <li class="nav-item" v-if="$auth.loggedIn">
         <router-link class="nav-link" to="/results">Results</router-link>
       </li>
+      <li class="nav-item" v-if="$auth.loggedIn && $auth.user?.is_admin">
+        <router-link class="nav-link" to="/admin">Admin</router-link>
+      </li>
       <li class="nav-item dropdown" v-if="$auth.loggedIn">
         <button class="btn btn-danger ms-lg-3" href="#" @click="logout">Logout</button>
       </li>

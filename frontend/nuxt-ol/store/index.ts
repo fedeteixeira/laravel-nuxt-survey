@@ -2,6 +2,7 @@ interface State {
   questions: Object[];
   answers: Object[];
   userAnswers: Object;
+  unsubmitted: Object[];
 }
 
 interface Commit {
@@ -12,6 +13,7 @@ export const state = () => ({
   questions: [],
   answers: [],
   userAnswers: {},
+  unsubmitted: [],
 });
 
 export const getters = {
@@ -26,6 +28,10 @@ export const getters = {
   getUserAnswers(state: State) {
     return state.userAnswers;
   },
+
+  getUnsubmitted(state: State) {
+    return state.unsubmitted;
+  },
 };
 
 export const mutations = {
@@ -37,6 +43,9 @@ export const mutations = {
   },
   SET_QUESTIONS(state: State, questions: Object[]) {
     state.questions = questions;
+  },
+  SET_UNSUBMITTED(state: State, unsubmitted: Object[]) {
+    state.unsubmitted = unsubmitted;
   },
 };
 
@@ -67,6 +76,17 @@ export const actions = {
         `${this.$config.apiUrl}/api/questions`
       );
       commit("SET_QUESTIONS", data?.questions ?? []);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  async fetchUnsubmitted({ commit }: Commit) {
+    try {
+      const { data } = await this.$axios.get(
+        `${this.$config.apiUrl}/api/answers/unsubmitted`
+      );
+      commit("SET_UNSUBMITTED", data);
     } catch (error) {
       console.error(error);
     }

@@ -1,10 +1,13 @@
 <template>
-    <div>
-      <Navbar></Navbar>
-      <div v-if="values.length > 0 && labels.length > 0">
-          <bar-chart :chartData="chartData" ref="barChart"></bar-chart>
-      </div>
+  <div class="d-flex flex-column align-items-center vh-100 vw-100">
+    <Navbar></Navbar>
+    <div v-if="values.length > 0 && labels.length > 0">
+        <bar-chart :chartData="chartData" ref="barChart"></bar-chart>
     </div>
+    <div v-else class="d-flex flex-column align-items-center h-100">
+      <h2 class="text-center my-auto">There are no results yet, come back later</h2>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
