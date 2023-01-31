@@ -1,13 +1,10 @@
 #!make
 
-npm-install: ## executa npm install
+npm-install: ## run npm install
 	docker-compose run --rm nuxt-ol npm install
 
-npm-build:
-	docker-compose run --rm nuxt-ol npm run build
+nuxt-up: ## start docker service
+	docker-compose up
 
-nuxt-up: ## iniciar serviço
-	docker-compose up -d
-
-nuxt-down: ## iniciar serviço
+nuxt-down: ## stop docker service
 	docker-compose down
